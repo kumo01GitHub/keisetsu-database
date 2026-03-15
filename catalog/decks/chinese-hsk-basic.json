@@ -1,0 +1,8 @@
+{
+  "id": "chinese-hsk-basic",
+  "title": "中国語 HSK 基本語彙",
+  "description": "HSK初級でよく使う基本語彙を練習する確認用デッキです。",
+  "path": "databases/chinese-hsk-basic.kdb",
+  "language": "ja",
+  "cardCount": 120
+}

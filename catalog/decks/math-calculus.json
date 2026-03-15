@@ -1,0 +1,8 @@
+{
+  "id": "math-calculus",
+  "title": "数学用語 微積分",
+  "description": "極限・微分・積分の基礎概念を学ぶ確認用デッキです。",
+  "path": "databases/math-calculus.kdb",
+  "language": "ja",
+  "cardCount": 71
+}

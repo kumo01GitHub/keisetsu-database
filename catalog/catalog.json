@@ -1,0 +1,66 @@
+{
+  "version": 2,
+  "updatedAt": "2026-03-15T13:14:18.208Z",
+  "decks": [
+    {
+      "id": "chemistry-formulas-basic",
+      "manifest": "decks/chemistry-formulas-basic.json"
+    },
+    {
+      "id": "chemistry-organic-basics",
+      "manifest": "decks/chemistry-organic-basics.json"
+    },
+    {
+      "id": "chinese-business",
+      "manifest": "decks/chinese-business.json"
+    },
+    {
+      "id": "chinese-hsk-basic",
+      "manifest": "decks/chinese-hsk-basic.json"
+    },
+    {
+      "id": "chinese-idioms",
+      "manifest": "decks/chinese-idioms.json"
+    },
+    {
+      "id": "french-a1",
+      "manifest": "decks/french-a1.json"
+    },
+    {
+      "id": "french-travel",
+      "manifest": "decks/french-travel.json"
+    },
+    {
+      "id": "french-verbs",
+      "manifest": "decks/french-verbs.json"
+    },
+    {
+      "id": "math-algebra",
+      "manifest": "decks/math-algebra.json"
+    },
+    {
+      "id": "math-calculus",
+      "manifest": "decks/math-calculus.json"
+    },
+    {
+      "id": "math-geometry",
+      "manifest": "decks/math-geometry.json"
+    },
+    {
+      "id": "portuguese-br-basic",
+      "manifest": "decks/portuguese-br-basic.json"
+    },
+    {
+      "id": "portuguese-pt-travel",
+      "manifest": "decks/portuguese-pt-travel.json"
+    },
+    {
+      "id": "portuguese-verbs",
+      "manifest": "decks/portuguese-verbs.json"
+    },
+    {
+      "id": "starter-basic",
+      "manifest": "decks/starter-basic.json"
+    }
+  ]
+}

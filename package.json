@@ -1,0 +1,12 @@
+{
+  "name": "keisetsu-database",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/update-catalog.mjs",
+    "validate:kdb": "node scripts/validate-kdb-format.mjs",
+    "validate:catalog": "node scripts/validate-catalog.mjs",
+    "validate": "npm run validate:kdb && npm run validate:catalog"
+  }
+}

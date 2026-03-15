@@ -1,0 +1,8 @@
+{
+  "id": "math-geometry",
+  "title": "数学用語 幾何",
+  "description": "図形・角度・証明に関連する幾何学の主要用語デッキです。",
+  "path": "databases/math-geometry.kdb",
+  "language": "ja",
+  "cardCount": 68
+}

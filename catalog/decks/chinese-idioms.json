@@ -1,0 +1,8 @@
+{
+  "id": "chinese-idioms",
+  "title": "中国語 成語",
+  "description": "日常でよく出る四字熟語・成語を中心にしたデッキです。",
+  "path": "databases/chinese-idioms.kdb",
+  "language": "ja",
+  "cardCount": 64
+}

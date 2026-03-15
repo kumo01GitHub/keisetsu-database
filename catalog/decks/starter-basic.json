@@ -1,0 +1,8 @@
+{
+  "id": "starter-basic",
+  "title": "スターター基本単語帳",
+  "description": "keisetsu の初期確認に使う 12 件のサンプルデッキです。",
+  "path": "databases/starter-basic.kdb",
+  "language": "ja",
+  "cardCount": 12
+}

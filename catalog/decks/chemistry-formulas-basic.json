@@ -1,0 +1,8 @@
+{
+  "id": "chemistry-formulas-basic",
+  "title": "化学式 基本セット",
+  "description": "無機化学の主要化学式を中心に学べる確認用デッキです。",
+  "path": "databases/chemistry-formulas-basic.kdb",
+  "language": "ja",
+  "cardCount": 84
+}

@@ -1,0 +1,8 @@
+{
+  "id": "french-verbs",
+  "title": "フランス語 動詞活用",
+  "description": "頻出動詞の現在形・過去形活用を確認するデッキです。",
+  "path": "databases/french-verbs.kdb",
+  "language": "ja",
+  "cardCount": 92
+}

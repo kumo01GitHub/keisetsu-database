@@ -1,0 +1,8 @@
+{
+  "id": "math-algebra",
+  "title": "数学用語 代数学",
+  "description": "方程式・因数分解・関数など代数学の基本用語デッキです。",
+  "path": "databases/math-algebra.kdb",
+  "language": "ja",
+  "cardCount": 75
+}
