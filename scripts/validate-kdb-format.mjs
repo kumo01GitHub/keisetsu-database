@@ -7,6 +7,9 @@ import { fileURLToPath } from 'node:url';
 const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const databasesDir = path.join(rootDir, 'databases');
 
+/**
+ * Executes a SQLite query with the system sqlite3 binary and returns trimmed text output.
+ */
 function runSqlite(dbPath, sql) {
   return execFileSync('sqlite3', [dbPath, sql], {
     cwd: rootDir,
@@ -14,12 +17,18 @@ function runSqlite(dbPath, sql) {
   }).trim();
 }
 
+/**
+ * Throws when a validation condition is not met.
+ */
 function assert(condition, message) {
   if (!condition) {
     throw new Error(message);
   }
 }
 
+/**
+ * Validates that one `.kdb` file satisfies the shared deck schema contract.
+ */
 async function validateKdbFile(fileName) {
   const dbPath = path.join(databasesDir, fileName);
 
@@ -71,6 +80,9 @@ async function validateKdbFile(fileName) {
   return { fileName, cardCount };
 }
 
+/**
+ * Validates every database file in `databases/`.
+ */
 async function main() {
   const entries = await fs.readdir(databasesDir, { withFileTypes: true });
   const kdbFiles = entries

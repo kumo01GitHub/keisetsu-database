@@ -8,11 +8,17 @@ const catalogDir = path.join(rootDir, 'catalog');
 const decksDir = path.join(catalogDir, 'decks');
 const catalogPath = path.join(catalogDir, 'catalog.json');
 
+/**
+ * Normalizes any input date into a valid ISO-8601 timestamp for catalog metadata.
+ */
 function toIsoDate(date) {
   const value = new Date(date);
   return Number.isNaN(value.getTime()) ? new Date().toISOString() : value.toISOString();
 }
 
+/**
+ * Reads a deck manifest file and returns the minimal catalog entry derived from it.
+ */
 async function readDeckManifest(fileName) {
   const filePath = path.join(decksDir, fileName);
   const raw = await fs.readFile(filePath, 'utf8');
@@ -28,6 +34,9 @@ async function readDeckManifest(fileName) {
   };
 }
 
+/**
+ * Rebuilds `catalog.json` from the manifests in `catalog/decks` while preserving the current version field.
+ */
 async function main() {
   const deckEntries = await fs.readdir(decksDir, { withFileTypes: true });
   const deckFiles = deckEntries

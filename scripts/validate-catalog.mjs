@@ -9,6 +9,9 @@ const catalogDir = path.join(rootDir, 'catalog');
 const decksDir = path.join(catalogDir, 'decks');
 const catalogPath = path.join(catalogDir, 'catalog.json');
 
+/**
+ * Executes a SQLite query with the system sqlite3 binary and returns trimmed text output.
+ */
 function runSqlite(dbPath, sql) {
   return execFileSync('sqlite3', [dbPath, sql], {
     cwd: rootDir,
@@ -16,17 +19,26 @@ function runSqlite(dbPath, sql) {
   }).trim();
 }
 
+/**
+ * Throws when a validation condition is not met.
+ */
 function assert(condition, message) {
   if (!condition) {
     throw new Error(message);
   }
 }
 
+/**
+ * Reads and parses a JSON file used by the catalog validation pipeline.
+ */
 async function readJson(filePath) {
   const raw = await fs.readFile(filePath, 'utf8');
   return JSON.parse(raw);
 }
 
+/**
+ * Validates one catalog entry against its manifest file and backing `.kdb` database.
+ */
 async function validateCatalogEntry(entry) {
   assert(typeof entry.id === 'string' && entry.id.trim().length > 0, 'catalog: entry.id is invalid');
   assert(
@@ -88,6 +100,9 @@ async function validateCatalogEntry(entry) {
   return { id: deck.id, cardCount };
 }
 
+/**
+ * Validates global catalog structure and every referenced deck artifact.
+ */
 async function main() {
   const catalog = await readJson(catalogPath);
 
