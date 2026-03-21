@@ -1,6 +1,6 @@
 # keisetsu Database
 
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/kumo01GitHub/keisetsu/pulls)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/kumo01GitHub/keisetsu-database/pulls)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 [![CI](https://github.com/kumo01GitHub/keisetsu-database/actions/workflows/ci.yml/badge.svg)](https://github.com/kumo01GitHub/keisetsu-database/actions/workflows/ci.yml)
 
