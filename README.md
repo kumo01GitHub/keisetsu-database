@@ -72,7 +72,7 @@ CREATE TABLE IF NOT EXISTS cards (
 
 ## kdb 更新手順
 
-1. `keisetsu-admin` などで `.kdb` と deck manifest を生成する
+1. `keisetsu-publisher` などで `.kdb` と deck manifest を生成する
 2. `.kdb` を `databases/` に配置する
 3. deck manifest を `catalog/decks/` に配置または更新する
 4. `npm run build` で `catalog/catalog.json` を再生成する
@@ -118,5 +118,5 @@ manifest の path を使って .kdb を取得
 ## 関連リンク
 
 - [keisetsu-mobile](https://github.com/kumo01GitHub/keisetsu-mobile)
-- [keisetsu-admin](https://github.com/kumo01GitHub/keisetsu-admin)
+- [keisetsu-publisher](https://github.com/kumo01GitHub/keisetsu-publisher)
 - [keisetsu-docs](https://github.com/kumo01GitHub/keisetsu-docs)
