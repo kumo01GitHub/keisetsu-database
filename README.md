@@ -1,5 +1,9 @@
 # keisetsu Database
 
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/kumo01GitHub/keisetsu/pulls)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
+[![CI](https://github.com/kumo01GitHub/keisetsu-database/actions/workflows/ci.yml/badge.svg)](https://github.com/kumo01GitHub/keisetsu-database/actions/workflows/ci.yml)
+
 keisetsu で配布する `.kdb`（SQLite）を管理するリポジトリです。  
 このリポジトリは「データ本体」と「配布メタデータ」と「検証自動化」を同時に管理します。
 
