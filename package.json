@@ -7,6 +7,10 @@
     "build": "node scripts/update-catalog.mjs",
     "validate:kdb": "node scripts/validate-kdb-format.mjs",
     "validate:catalog": "node scripts/validate-catalog.mjs",
-    "validate": "npm run validate:kdb && npm run validate:catalog"
+    "validate": "npm run validate:kdb && npm run validate:catalog",
+    "unpack": "node scripts/unpack-published-zip.mjs"
+  },
+  "devDependencies": {
+    "adm-zip": "^0.5.16"
   }
 }

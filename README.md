@@ -7,18 +7,26 @@
 keisetsu で配布する `.kdb`（SQLite）を管理するリポジトリです。  
 このリポジトリは「データ本体」と「配布メタデータ」と「検証自動化」を同時に管理します。
 
-## ここで管理するもの
+## ディレクトリ構成
 
-- `databases/*.kdb`
-	- 実際にモバイルアプリが読み込む単語帳データ
-- `catalog/decks/*.json`
-	- deck ごとの manifest（タイトル、パス、件数など）
-- `catalog/catalog.json`
-	- 各 manifest への参照をまとめた索引（一覧）
-- `schema.sql`
-	- kdb の標準スキーマ契約
-- `scripts/*.mjs`
-	- catalog 再生成と検証
+```
+keisetsu-database/
+├── catalog/
+│   ├── catalog.json         # 全deckの索引（自動生成）
+│   └── decks/              # 各deckのmanifest（JSON）
+├── databases/              # 各deckの.kdb（SQLite DB）
+├── schema.sql              # kdbの標準スキーマ
+├── scripts/                # 各種自動化スクリプト
+├── package.json            # npm scripts定義
+└── README.md
+```
+
+### 各ディレクトリの役割
+
+- `catalog/` … 配布用メタデータ（索引・manifest）
+- `databases/` … モバイルアプリが読み込む.kdb本体
+- `schema.sql` … kdbの標準スキーマ
+- `scripts/` … 自動化・検証用スクリプト
 
 ## kdb の説明
 
@@ -55,29 +63,24 @@ CREATE TABLE IF NOT EXISTS cards (
 );
 ```
 
-## スクリプトの説明
+## npm scripts の説明
 
-- `scripts/update-catalog.mjs`
-	- `catalog/decks/*.json` を走査し `catalog/catalog.json` を再生成
-	- catalog には各 deck の `id` と manifest パスを記録
-	- catalog の `updatedAt` を更新
+| コマンド                | 説明                                                                 |
+|-------------------------|----------------------------------------------------------------------|
+| npm run unpack -- <zip> | keisetsu-publisherのzipをcatalog/databasesに展開                     |
+| npm run build           | catalog/decks/*.jsonからcatalog/catalog.jsonを再生成                  |
+| npm run validate:kdb    | .kdbファイルの必須テーブル/列/件数を検証                             |
+| npm run validate:catalog| catalog.jsonとmanifest/.kdbの整合性を検証                            |
+| npm run validate        | validate:kdbとvalidate:catalogをまとめて実行                         |
 
-- `scripts/validate-kdb-format.mjs`
-	- すべての `.kdb` に対して必須テーブル/列を検証
-	- `deck_metadata.display_name`, `file_name`, カード件数を検証
-
-- `scripts/validate-catalog.mjs`
-	- `catalog/catalog.json` と `catalog/decks/*.json` の整合性を検証
-	- manifest と `.kdb` のタイトル/ファイル名/件数を突合
 
 ## kdb 更新手順
 
-1. `keisetsu-publisher` などで `.kdb` と deck manifest を生成する
-2. `.kdb` を `databases/` に配置する
-3. deck manifest を `catalog/decks/` に配置または更新する
-4. `npm run build` で `catalog/catalog.json` を再生成する
-5. `npm run validate` で形式・整合性を検証する
-6. 問題がなければ commit / push（必要に応じて tag）する
+1. `keisetsu-publisher` で `.kdb`/manifest入りzipを出力
+2. `npm run unpack -- /path/to/published.zip` で展開（catalog/databasesに上書き）
+3. `npm run build` で catalog.json を再生成
+4. `npm run validate` で形式・整合性を検証
+5. 問題なければ commit/push（必要に応じてtag）
 
 ## ローカル開発・検証
 
@@ -87,19 +90,22 @@ CREATE TABLE IF NOT EXISTS cards (
 - npm
 - `sqlite3` CLI（検証スクリプトで使用）
 
-### コマンド
+### 主なコマンド
 
 ```bash
 cd keisetsu-database
 npm ci
 
-# catalog を再生成
+# publisherのzipを展開（catalog/databasesに上書き）
+npm run unpack -- /path/to/published.zip
+
+# catalogを再生成
 npm run build
 
 # 形式検証
 npm run validate:kdb
 
-# catalog と DB の整合性検証
+# catalogとDBの整合性検証
 npm run validate:catalog
 
 # まとめて検証
