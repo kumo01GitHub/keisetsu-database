@@ -75,10 +75,12 @@ CREATE TABLE IF NOT EXISTS cards (
 
 ## kdb 更新手順
 
-** 前提 **
+### 前提
 
 - Node.js
 - npm
+
+### 手順
 
 1. `git clone` またはリポジトリを取得し、`cd keisetsu-database`
 2. `npm ci` で依存をインストール
