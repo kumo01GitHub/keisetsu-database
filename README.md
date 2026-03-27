@@ -63,18 +63,22 @@ CREATE TABLE IF NOT EXISTS cards (
 );
 ```
 
-## npm scripts の説明
+## 提供コマンド
 
-| コマンド                | 説明                                                                 |
-|-------------------------|----------------------------------------------------------------------|
-| npm run unpack -- <zip> | keisetsu-publisherのzipをcatalog/databasesに展開                     |
-| npm run build           | catalog/decks/*.jsonからcatalog/catalog.jsonを再生成                  |
-| npm run validate:kdb    | .kdbファイルの必須テーブル/列/件数を検証                             |
-| npm run validate:catalog| catalog.jsonとmanifest/.kdbの整合性を検証                            |
-| npm run validate        | validate:kdbとvalidate:catalogをまとめて実行                         |
-
+| コマンド | 概要 |
+|---------|-----|
+| npm run unpack -- /path/to/published.zip | keisetsu-publisherのzipをcatalog/databasesに展開 |
+| npm run build | catalog/decks/*.jsonからcatalog/catalog.jsonを再生成 |
+| npm run validate:kdb | .kdbファイルの必須テーブル/列/件数を検証 |
+| npm run validate:catalog | catalog.jsonとmanifest/.kdbの整合性を検証 |
+| npm run validate | validate:kdbとvalidate:catalogをまとめて実行 |
 
 ## kdb 更新手順
+
+** 前提 **
+
+- Node.js
+- npm
 
 1. `git clone` またはリポジトリを取得し、`cd keisetsu-database`
 2. `npm ci` で依存をインストール
@@ -83,13 +87,6 @@ CREATE TABLE IF NOT EXISTS cards (
 5. `npm run build` で catalog.json を再生成
 6. `npm run validate` で形式・整合性を検証
 7. 問題なければ commit/push（必要に応じてtag）
-
-## ローカル開発・検証
-
-### 前提
-
-- Node.js
-- npm
 
 ## 配布URLの基本形
 
