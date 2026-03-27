@@ -76,41 +76,20 @@ CREATE TABLE IF NOT EXISTS cards (
 
 ## kdb 更新手順
 
-1. `keisetsu-publisher` で `.kdb`/manifest入りzipを出力
-2. `npm run unpack -- /path/to/published.zip` で展開（catalog/databasesに上書き）
-3. `npm run build` で catalog.json を再生成
-4. `npm run validate` で形式・整合性を検証
-5. 問題なければ commit/push（必要に応じてtag）
+1. `git clone` またはリポジトリを取得し、`cd keisetsu-database`
+2. `npm ci` で依存をインストール
+3. `keisetsu-publisher` で `.kdb`/manifest入りzipを出力
+4. `npm run unpack -- /path/to/published.zip` で展開（catalog/databasesに上書き）
+5. `npm run build` で catalog.json を再生成
+6. `npm run validate` で形式・整合性を検証
+7. 問題なければ commit/push（必要に応じてtag）
 
 ## ローカル開発・検証
 
 ### 前提
 
-- Node.js 20 系以上（推奨）
+- Node.js
 - npm
-- `sqlite3` CLI（検証スクリプトで使用）
-
-### 主なコマンド
-
-```bash
-cd keisetsu-database
-npm ci
-
-# publisherのzipを展開（catalog/databasesに上書き）
-npm run unpack -- /path/to/published.zip
-
-# catalogを再生成
-npm run build
-
-# 形式検証
-npm run validate:kdb
-
-# catalogとDBの整合性検証
-npm run validate:catalog
-
-# まとめて検証
-npm run validate
-```
 
 ## 配布URLの基本形
 

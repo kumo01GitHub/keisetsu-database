@@ -1,20 +1,28 @@
 #!/usr/bin/env node
-import { promises as fs } from 'node:fs';
+import { readdirSync } from 'node:fs';
 import path from 'node:path';
-import { execFileSync } from 'node:child_process';
+import Database from 'better-sqlite3';
 import { fileURLToPath } from 'node:url';
 
 const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const databasesDir = path.join(rootDir, 'databases');
 
+
 /**
- * Executes a SQLite query with the system sqlite3 binary and returns trimmed text output.
+ * Executes a SQLite query using node:sqlite and returns trimmed text output.
  */
 function runSqlite(dbPath, sql) {
-  return execFileSync('sqlite3', [dbPath, sql], {
-    cwd: rootDir,
-    encoding: 'utf8',
-  }).trim();
+  const db = new Database(dbPath, { readonly: true });
+  let result;
+  if (/count\(\*\)/i.test(sql) || /limit 1/i.test(sql)) {
+    const row = db.prepare(sql).get();
+    result = Object.values(row).join('|');
+  } else {
+    const rows = db.prepare(sql).all();
+    result = rows.map(r => Object.values(r).join('|')).join('\n');
+  }
+  db.close();
+  return result;
 }
 
 /**
@@ -29,7 +37,7 @@ function assert(condition, message) {
 /**
  * Validates that one `.kdb` file satisfies the shared deck schema contract.
  */
-async function validateKdbFile(fileName) {
+function validateKdbFile(fileName) {
   const dbPath = path.join(databasesDir, fileName);
 
   const cardsTableExists = runSqlite(
@@ -83,8 +91,8 @@ async function validateKdbFile(fileName) {
 /**
  * Validates every database file in `databases/`.
  */
-async function main() {
-  const entries = await fs.readdir(databasesDir, { withFileTypes: true });
+function main() {
+  const entries = readdirSync(databasesDir, { withFileTypes: true });
   const kdbFiles = entries
     .filter((entry) => entry.isFile() && entry.name.endsWith('.kdb'))
     .map((entry) => entry.name)
@@ -94,13 +102,15 @@ async function main() {
 
   const results = [];
   for (const fileName of kdbFiles) {
-    results.push(await validateKdbFile(fileName));
+    results.push(validateKdbFile(fileName));
   }
 
   console.log(`Validated ${results.length} .kdb files successfully.`);
 }
 
-main().catch((error) => {
+try {
+  main();
+} catch (error) {
   console.error(error instanceof Error ? error.message : error);
   process.exit(1);
-});
+}

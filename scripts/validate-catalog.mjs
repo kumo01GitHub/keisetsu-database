@@ -1,7 +1,7 @@
 #!/usr/bin/env node
-import { promises as fs } from 'node:fs';
+import { promises as fs, readdirSync, accessSync, readFileSync } from 'node:fs';
 import path from 'node:path';
-import { execFileSync } from 'node:child_process';
+import Database from 'better-sqlite3';
 import { fileURLToPath } from 'node:url';
 
 const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -9,14 +9,22 @@ const catalogDir = path.join(rootDir, 'catalog');
 const decksDir = path.join(catalogDir, 'decks');
 const catalogPath = path.join(catalogDir, 'catalog.json');
 
+
 /**
- * Executes a SQLite query with the system sqlite3 binary and returns trimmed text output.
+ * Executes a SQLite query using node:sqlite and returns trimmed text output.
  */
 function runSqlite(dbPath, sql) {
-  return execFileSync('sqlite3', [dbPath, sql], {
-    cwd: rootDir,
-    encoding: 'utf8',
-  }).trim();
+  const db = new Database(dbPath, { readonly: true });
+  let result;
+  if (/count\(\*\)/i.test(sql) || /limit 1/i.test(sql)) {
+    const row = db.prepare(sql).get();
+    result = Object.values(row).join('|');
+  } else {
+    const rows = db.prepare(sql).all();
+    result = rows.map(r => Object.values(r).join('|')).join('\n');
+  }
+  db.close();
+  return result;
 }
 
 /**
@@ -31,15 +39,15 @@ function assert(condition, message) {
 /**
  * Reads and parses a JSON file used by the catalog validation pipeline.
  */
-async function readJson(filePath) {
-  const raw = await fs.readFile(filePath, 'utf8');
+function readJson(filePath) {
+  const raw = readFileSync(filePath, 'utf8');
   return JSON.parse(raw);
 }
 
 /**
  * Validates one catalog entry against its manifest file and backing `.kdb` database.
  */
-async function validateCatalogEntry(entry) {
+function validateCatalogEntry(entry) {
   assert(typeof entry.id === 'string' && entry.id.trim().length > 0, 'catalog: entry.id is invalid');
   assert(
     typeof entry.manifest === 'string' && entry.manifest.trim().length > 0,
@@ -47,9 +55,9 @@ async function validateCatalogEntry(entry) {
   );
 
   const manifestPath = path.join(catalogDir, entry.manifest);
-  await fs.access(manifestPath);
+  accessSync(manifestPath);
 
-  const deck = await readJson(manifestPath);
+  const deck = readJson(manifestPath);
 
   for (const key of ['id', 'title', 'path']) {
     assert(
@@ -62,7 +70,7 @@ async function validateCatalogEntry(entry) {
   assert(deck.path.endsWith('.kdb'), `${entry.manifest}: path must end with .kdb`);
 
   const dbPath = path.join(rootDir, deck.path);
-  await fs.access(dbPath);
+  accessSync(dbPath);
 
   const metadataRow = runSqlite(
     dbPath,
@@ -103,8 +111,8 @@ async function validateCatalogEntry(entry) {
 /**
  * Validates global catalog structure and every referenced deck artifact.
  */
-async function main() {
-  const catalog = await readJson(catalogPath);
+function main() {
+  const catalog = readJson(catalogPath);
 
   assert(typeof catalog.version === 'number', 'catalog.json: version must be a number');
   assert(typeof catalog.updatedAt === 'string', 'catalog.json: updatedAt must be a string');
@@ -116,7 +124,7 @@ async function main() {
     seenIds.add(entry.id);
   }
 
-  const manifestEntries = await fs.readdir(decksDir, { withFileTypes: true });
+  const manifestEntries = readdirSync(decksDir, { withFileTypes: true });
   const manifestFileSet = new Set(
     manifestEntries
       .filter((entry) => entry.isFile() && entry.name.endsWith('.json'))
@@ -129,13 +137,15 @@ async function main() {
 
   const results = [];
   for (const entry of catalog.decks) {
-    results.push(await validateCatalogEntry(entry));
+    results.push(validateCatalogEntry(entry));
   }
 
   console.log(`Validated catalog consistency for ${results.length} decks successfully.`);
 }
 
-main().catch((error) => {
+try {
+  main();
+} catch (error) {
   console.error(error instanceof Error ? error.message : error);
   process.exit(1);
-});
+}
