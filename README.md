@@ -18,7 +18,6 @@ keisetsu-database/
 ├── schema/                 # テーブルごとに分割したSQLスキーマ
 │   ├── deck_metadata.sql   # deck_metadataテーブル定義
 │   └── cards.sql           # cardsテーブル定義
-├── schema.sql              # kdbの標準スキーマ（全体/一括用）
 ├── scripts/                # 各種自動化スクリプト
 ├── package.json            # npm scripts定義
 └── README.md
