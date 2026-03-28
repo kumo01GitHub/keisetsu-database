@@ -45,28 +45,6 @@ keisetsu-database/
 - `cards`
 	- 学習カード本体
 
-### 標準スキーマ（`schema.sql`）
-
-```sql
-CREATE TABLE IF NOT EXISTS deck_metadata (
-	id INTEGER PRIMARY KEY CHECK (id = 1),
-	display_name TEXT NOT NULL,
-	file_name TEXT NOT NULL,
-	created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-	updated_at TEXT DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE IF NOT EXISTS cards (
-	id TEXT PRIMARY KEY,
-	term TEXT NOT NULL,
-	summary TEXT NOT NULL,
-	detail TEXT DEFAULT '',
-	category TEXT DEFAULT '',
-	created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-	updated_at TEXT DEFAULT CURRENT_TIMESTAMP
-);
-```
-
 ## 提供コマンド
 
 | コマンド | 概要 |

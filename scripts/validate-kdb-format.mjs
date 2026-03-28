@@ -1,12 +1,29 @@
 #!/usr/bin/env node
-import { readdirSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
-import Database from 'better-sqlite3';
 import { fileURLToPath } from 'node:url';
+import Database from 'better-sqlite3';
 
 const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const databasesDir = path.join(rootDir, 'databases');
 
+// Read expected schema from SQL files
+function parseColumnsFromSql(sql) {
+  // Extract column names from CREATE TABLE ... (...)
+  const match = sql.match(/CREATE TABLE IF NOT EXISTS \w+ \(([^;]+)\)/i);
+  if (!match) return [];
+  return match[1]
+    .split(',')
+    .map(line => line.trim())
+    .filter(line => line && !line.startsWith('--'))
+    .map(line => line.split(/\s+/)[0])
+    .filter(name => !['PRIMARY', 'UNIQUE', 'CHECK', 'INDEX', 'KEY', ');'].includes(name.toUpperCase()));
+}
+
+const cardsSql = readFileSync(path.join(rootDir, 'schema/cards.sql'), 'utf8');
+const deckMetadataSql = readFileSync(path.join(rootDir, 'schema/deck_metadata.sql'), 'utf8');
+const expectedCardsColumns = parseColumnsFromSql(cardsSql);
+const expectedDeckMetadataColumns = parseColumnsFromSql(deckMetadataSql);
 
 /**
  * Executes a SQLite query using node:sqlite and returns trimmed text output.
@@ -52,16 +69,28 @@ function validateKdbFile(fileName) {
   );
   assert(metadataTableExists === '1', `${fileName}: deck_metadata table is missing`);
 
-  const columnsRaw = runSqlite(dbPath, 'PRAGMA table_info(cards);');
-  const columns = new Set(
-    columnsRaw
+  // Validate cards columns from schema/cards.sql
+  const cardsColumnsRaw = runSqlite(dbPath, 'PRAGMA table_info(cards);');
+  const cardsColumns = new Set(
+    cardsColumnsRaw
       .split('\n')
       .filter(Boolean)
       .map((line) => line.split('|')[1])
   );
+  for (const expectedColumn of expectedCardsColumns) {
+    assert(cardsColumns.has(expectedColumn), `${fileName}: cards.${expectedColumn} is missing`);
+  }
 
-  for (const expectedColumn of ['id', 'term', 'summary', 'detail', 'category']) {
-    assert(columns.has(expectedColumn), `${fileName}: cards.${expectedColumn} is missing`);
+  // Validate deck_metadata columns from schema/deck_metadata.sql
+  const metadataColumnsRaw = runSqlite(dbPath, 'PRAGMA table_info(deck_metadata);');
+  const metadataColumns = new Set(
+    metadataColumnsRaw
+      .split('\n')
+      .filter(Boolean)
+      .map((line) => line.split('|')[1])
+  );
+  for (const expectedColumn of expectedDeckMetadataColumns) {
+    assert(metadataColumns.has(expectedColumn), `${fileName}: deck_metadata.${expectedColumn} is missing`);
   }
 
   const metadataRow = runSqlite(
@@ -114,3 +143,5 @@ try {
   console.error(error instanceof Error ? error.message : error);
   process.exit(1);
 }
+
+
