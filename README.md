@@ -15,7 +15,10 @@ keisetsu-database/
 │   ├── catalog.json         # 全deckの索引（自動生成）
 │   └── decks/              # 各deckのmanifest（JSON）
 ├── databases/              # 各deckの.kdb（SQLite DB）
-├── schema.sql              # kdbの標準スキーマ
+├── schema/                 # テーブルごとに分割したSQLスキーマ
+│   ├── deck_metadata.sql   # deck_metadataテーブル定義
+│   └── cards.sql           # cardsテーブル定義
+├── schema.sql              # kdbの標準スキーマ（全体/一括用）
 ├── scripts/                # 各種自動化スクリプト
 ├── package.json            # npm scripts定義
 └── README.md
@@ -25,7 +28,8 @@ keisetsu-database/
 
 - `catalog/` … 配布用メタデータ（索引・manifest）
 - `databases/` … モバイルアプリが読み込む.kdb本体
-- `schema.sql` … kdbの標準スキーマ
+- `schema/` … テーブルごとに分割したSQLスキーマ
+- `schema.sql` … kdbの標準スキーマ（全体/一括用）
 - `scripts/` … 自動化・検証用スクリプト
 
 ## kdb の説明
